@@ -18,6 +18,22 @@ func (r *Repository) IsAdminAlreadyExist() (bool, error) {
 	return true, nil
 }
 
+func (r *Repository) GetUserByusername(username string) (model.User, error) {
+	var user model.User
+	if err := r.DB.Where("username = ?", username).First(&user).Error; err != nil {
+		return model.User{}, err
+	}
+	return user, nil
+}
+
+func (r *Repository) GetUserById(id int) (model.User, error) {
+	var user model.User
+	if err := r.DB.Where("id = ?", id).First(&user).Error; err != nil {
+		return model.User{}, err
+	}
+	return user, nil
+}
+
 func (r *Repository) CreateUser(user *model.User) error {
 	if err := r.DB.Create(user).Error; err != nil {
 		return err
@@ -25,14 +41,14 @@ func (r *Repository) CreateUser(user *model.User) error {
 	return nil
 }
 
-func (r *Repository) Reabilite(id int, user model.User) (model.User, error) {
+func (r *Repository) Reabilite(id int, user model.User) error {
 	if err := r.DB.Model(&user).Where("id = ?", id).Updates(user).Error; err != nil {
-		return model.User{}, err
+		return err
 	}
-	return user, nil
+	return nil
 }
 
-func (r *Repository) DeleteUser(id string) error {
+func (r *Repository) DeleteUser(id int) error {
 	var user model.User
 	if err := r.DB.Where("id = ?", id).Delete(user).Error; err != nil {
 		return err

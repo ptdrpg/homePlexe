@@ -3,7 +3,9 @@ package controller
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/ptdrpg/homePlexe/lib"
 	"github.com/ptdrpg/homePlexe/model"
 )
@@ -30,13 +32,13 @@ func (c *Controller) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 			res = append(res, model.VisitorResponse{
 				Id:         users[i].Id,
 				Username:   users[i].Username,
-				Password:  users[i].Password,
+				Password:   users[i].Password,
 				Status:     users[i].Status,
 				Is_expired: users[i].Is_expired,
 				Created_at: users[i].Created_at,
 				Updated_at: users[i].Updated_at,
 			})
-		}else if users[i].Status == "admin" {
+		} else if users[i].Status == "admin" {
 			admin.Id = users[i].Id
 			admin.Username = users[i].Username
 			admin.Status = users[i].Status
@@ -59,7 +61,7 @@ func (c *Controller) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user model.UserInput
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -89,9 +91,9 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newUser := model.User{
-		Username: user.Username,
-		Status:   user.Status,
-		Password: user.Password,
+		Username:   user.Username,
+		Status:     user.Status,
+		Password:   user.Password,
 		HashedPass: hashedPass,
 		Is_expired: false,
 	}
@@ -104,6 +106,54 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	res := CreateResponse{
 		Message: "user successfuly created",
 	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
+func (c *Controller) ActualiseUser(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "Invalid param", http.StatusBadRequest)
+		return
+	}
+	user, err := c.R.GetUserById(id)
+	if err != nil {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	user.Is_expired = !user.Is_expired
+	if err := c.R.Reabilite(id, user); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	res := CreateResponse{
+		Message: "user successfuly reabilited",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
+func (c *Controller) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "Invalid param", http.StatusBadRequest)
+		return
+	}
+
+	if err := c.R.DeleteUser(id); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	res := CreateResponse{
+		Message: "user successfuly deleted",
+	}
+	
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 }

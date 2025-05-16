@@ -32,7 +32,10 @@ func NewRouter(c *controller.Controller) *Router {
 
 func (r *Router) RegisterRouter() {
 	r.R.Route("/api/v1", func(v1 chi.Router) {
-		
+		v1.Route("/users", func(users chi.Router) {
+			users.Get("/", r.C.GetAllUsers)
+			users.Post("/newVisitor", r.C.CreateUser)
+		})
 	})
 }
 

@@ -3,6 +3,7 @@ package app
 import (
 	"log"
 
+	"github.com/ptdrpg/homePlexe/model"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -16,6 +17,8 @@ func COnnexion() {
 		log.Fatalf("failed to connect to the database: %v", errors)
 	}
 
-	db.AutoMigrate()
+	db.AutoMigrate(
+		&model.User{},
+	)
 	DB = db
 }

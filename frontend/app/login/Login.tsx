@@ -1,27 +1,100 @@
+import loginPic from "~/assets/cassette.jpg"
+import TextField from "@mui/material/TextField"
+import InputAdornment from "@mui/material/InputAdornment"
+import { inputBaseClasses } from '@mui/material/InputBase';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import { useState } from "react";
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useForm } from "react-hook-form";
+import { LoginService } from "~/service/login";
+import type { logintype } from "~/service/types";
 
 function Login() {
+  const loginService = new LoginService()
+  const { register, handleSubmit, reset } = useForm<logintype>()
+  const [showPassword, setShowPassword] = useState(false);
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+  const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
+  const onSubmit = async (data: logintype) => {
+    const res = await loginService.login(data)
+    console.log(res);
+    reset()
+  }
+
   return (
-    <div className="w-[100%] h-[100vh] flex justify-center items-center">
-      <div>
-        <h1 className="text-3xl font-bold text-center">Welcome to HomePlexe</h1>
-        <form className="flex flex-col gap-4 mt-4">
-          <input
-            type="text"
-            placeholder="Username"
-            className="border border-gray-300 p-2 rounded"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="border border-gray-300 p-2 rounded"
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
-          >
-            Login
-          </button>
-        </form>
+    <div className="w-[100%] h-[100vh] grid grid-cols-2">
+      <img src={loginPic} alt="loginpic" className="w-[100%] h-[100vh] object-cover" />
+      <div className="flex align-center justify-center p-[1%]">
+        <div className="flex flex-col items-center justify-center gap-[10%] w-[75%]">
+          <h1 className="text-6xl font-black text-center text-amber-400">Welcome to <br /> HomePlexe</h1>
+          <form className="flex flex-col gap-4 mt-4 w-[100%]" onSubmit={handleSubmit(onSubmit)}>
+            <TextField
+              id="outlined-suffix-shrink"
+              label="username"
+              variant="outlined"
+              className="text-emerald-500 w-[100%] outline-amber-400"
+              {...register("username", { required: true })}
+              slotProps={{
+                input: {
+                  endAdornment: (
+                    <InputAdornment
+                      position="end"
+                      className="outline-amber-400"
+                      sx={{
+                        opacity: 0,
+                        pointerEvents: 'none',
+                        [`[data-shrink=true] ~ .${inputBaseClasses.root} > &`]: {
+                          opacity: 1,
+                        },
+                      }}
+                    >
+                    </InputAdornment>
+                  ),
+                },
+              }}
+            />
+            <FormControl variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                {...register("password", { required: true })}
+                className="text-emerald-500 outline-amber-400"
+                type={showPassword ? 'text' : 'password'}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label={
+                        showPassword ? 'hide the password' : 'display the password'
+                      }
+                      onClick={() => setShowPassword((show) => !show)}
+                      onMouseDown={handleMouseDownPassword}
+                      onMouseUp={handleMouseUpPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+            <button
+              type="submit"
+              className="w-[100%] p-[10px] bg-amber-400 text-white rounded-[10px] font-black cursor-pointer hover:bg-emerald-400"
+            >
+              Login
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )

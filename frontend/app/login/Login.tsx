@@ -5,18 +5,28 @@ import { inputBaseClasses } from '@mui/material/InputBase';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useForm } from "react-hook-form";
 import { LoginService } from "~/service/login";
 import type { logintype } from "~/service/types";
+import { useNavigate } from "react-router";
+import { isTokenValid } from "~/service/axios";
 
 function Login() {
   const loginService = new LoginService()
   const { register, handleSubmit, reset } = useForm<logintype>()
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  useLayoutEffect(()=> {
+    if (isTokenValid()) {
+      navigate("/dash");
+    }
+  },[])
+
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
@@ -26,8 +36,10 @@ function Login() {
 
   const onSubmit = async (data: logintype) => {
     const res = await loginService.login(data)
-    console.log(res);
-    reset()
+    if (res) {
+      navigate("/dash")
+      reset()
+    }
   }
 
   return (

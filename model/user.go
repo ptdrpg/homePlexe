@@ -3,7 +3,7 @@ package model
 import "time"
 
 type User struct {
-	Id         int    `gorm:"primaryKey" json:"id"`
+	Id         int       `gorm:"primaryKey" json:"id"`
 	Username   string    `gorm:"unique;not null" json:"username"`
 	Password   string    `gorm:"not null" json:"password"`
 	HashedPass string    `gorm:"not null" json:"hashed_pass"`
@@ -14,7 +14,7 @@ type User struct {
 }
 
 type AdminRes struct {
-	Id         int    `json:"id"`
+	Id         int       `json:"id"`
 	Username   string    `json:"username"`
 	Status     string    `json:"status"`
 	Created_at time.Time `json:"created_at"`
@@ -22,7 +22,7 @@ type AdminRes struct {
 }
 
 type VisitorResponse struct {
-	Id         int    `json:"id"`
+	Id         int       `json:"id"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password"`
 	Status     string    `json:"status"`

@@ -6,7 +6,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/ptdrpg/homePlexe/controller"
-	"github.com/ptdrpg/homePlexe/lib"
+	// "github.com/ptdrpg/homePlexe/lib"
 )
 
 type Router struct {
@@ -20,12 +20,12 @@ func NewRouter(c *controller.Controller) *Router {
 	// Middleware CORS
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE","OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type"},
 		AllowCredentials: true,
 	}))
 
-	r.Use(lib.JWTMiddleware)
+	// r.Use(lib.JWTMiddleware)
 	return &Router{
 		R: r,
 		C: c,

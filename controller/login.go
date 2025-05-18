@@ -31,7 +31,7 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := lib.GenerateToken(user.Id, user.Status)
+	token, err := lib.GenerateToken(user.Id, user.Status, user.Username)
 	if err != nil {
 		http.Error(w, "⛔ Failed to generate token", http.StatusInternalServerError)
 		return

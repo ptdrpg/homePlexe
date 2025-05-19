@@ -87,6 +87,9 @@ func JWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers","Authorization, Content-Type")
+		w.Header().Set("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS")
 		next.ServeHTTP(w, r)
 	})
 }

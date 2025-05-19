@@ -11,8 +11,6 @@ export const decodePaylod = () => {
   if (token) {
     try {
       const decoded = jwtDecode<Paylod>(token);
-      console.log(decoded);
-      
       return decoded;
     } catch (error) {
       return null;

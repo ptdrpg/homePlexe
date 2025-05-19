@@ -10,7 +10,7 @@ function Dashboard() {
   
   useEffect(()=> {
     (async ()=> {
-      // interceptor();
+      interceptor();
       const res = await visitorService.getAllVisitor();
       setVisitor(res)
     })()

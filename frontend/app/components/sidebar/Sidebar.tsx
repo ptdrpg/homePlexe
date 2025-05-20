@@ -5,13 +5,24 @@ import Books from "~/components/icon/Books"
 import DashIcon from "~/components/icon/DashIcon"
 import Movies from "~/components/icon/Movies"
 import LogoutIcon from '../icon/Logout';
+import { useLayoutEffect, useState } from 'react';
+import { decodePaylod } from '~/service/decode';
 
 function Sidebar() {
+  const [view, setView] = useState<boolean>(true)
   const navigate = useNavigate();
   const location = useLocation();
   const isActive = (path: string) => {
     return location.pathname == path;
   }
+
+  useLayoutEffect(() => {
+    const payload = decodePaylod();
+    if (payload?.role == "visitor") {
+      setView(false);
+    }
+  },[])
+
   const navLinkStatic = [
     {
       icon: <DashIcon color={isActive("/dash")? "white": "black"} />,
@@ -41,7 +52,7 @@ function Sidebar() {
         <div className='w-[100%]'>
           {
             navLinkStatic.map((item, idx) => (
-              <SideButton is_active={isActive} key={idx} icon={item.icon} label={item.label} link={item.link}  />
+              item.label == "Dashboard"? view && <SideButton is_active={isActive} key={idx} icon={item.icon} label={item.label} link={item.link}  /> : <SideButton is_active={isActive} key={idx} icon={item.icon} label={item.label} link={item.link}  />
             ))
           }
         </div>

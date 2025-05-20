@@ -8,7 +8,7 @@ function Dashboard() {
   const visitorService = new VisitorService();
   const [visitors, setVisitor] = useState<visitorType[]>()
   const [changed_id, setChanged] = useState<number>()
-  
+
   useEffect(()=> {
     (async ()=> {
       interceptor();

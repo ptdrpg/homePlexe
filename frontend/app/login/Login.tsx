@@ -50,7 +50,7 @@ function Login() {
         }
       }
     } catch (error) {
-      // reset()
+      reset()
       alert("your account has been desabled");
     }
   }

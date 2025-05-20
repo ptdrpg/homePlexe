@@ -14,6 +14,7 @@ import { LoginService } from "~/service/login";
 import type { logintype } from "~/service/types";
 import { useNavigate } from "react-router";
 import { isTokenValid } from "~/service/axios";
+import { decodePaylod } from "~/service/decode";
 
 function Login() {
   const loginService = new LoginService()
@@ -23,7 +24,11 @@ function Login() {
 
   useLayoutEffect(()=> {
     if (isTokenValid()) {
-      navigate("/dash");
+      const decoded = decodePaylod()
+      if (decoded) {
+        decoded.role == 'admin'? navigate("/dash") : navigate('/movies')
+        reset()
+      }
     }
   },[])
 
@@ -35,10 +40,18 @@ function Login() {
   };
 
   const onSubmit = async (data: logintype) => {
-    const res = await loginService.login(data)
-    if (res) {
-      navigate("/dash")
-      reset()
+    try {
+      const res = await loginService.login(data)
+      if (res) {
+        const decoded = decodePaylod()
+        if (decoded) {
+          decoded.role == 'admin'? navigate("/dash") : navigate('/movies')
+          reset()
+        }
+      }
+    } catch (error) {
+      // reset()
+      alert("your account has been desabled");
     }
   }
 

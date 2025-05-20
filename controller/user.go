@@ -122,8 +122,12 @@ func (c *Controller) ActualiseUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
+	if user.Is_expired {
+		user.Is_expired = false
+	} else {
+		user.Is_expired = true
+	}
 
-	user.Is_expired = !user.Is_expired
 	if err := c.R.Reabilite(id, user); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

@@ -53,7 +53,7 @@ apiService.interceptors.response.use(
       );
       if (error.response.status === 401) {
         console.warn("Token expiré ou invalide. Redirection...");
-        window.location.href = "/login";
+        window.location.href = "/";
       }
     } else if (error.request) {
       console.error("Erreur : Aucune réponse reçue du serveur", error.request);

@@ -9,4 +9,12 @@ export class VisitorService {
       return data
     })
   }
+
+  reactiveVisitor = async (id: number) => {
+    return await apiService.put(`/users/reabilite/${id}`)
+    .then(async(response) => await response.data)
+    .then((data: {message: string})=> {
+      return data
+    })
+  }
 }

@@ -7,6 +7,7 @@ import { interceptor } from "~/service/axios";
 function Dashboard() {
   const visitorService = new VisitorService();
   const [visitors, setVisitor] = useState<visitorType[]>()
+  const [changed_id, setChanged] = useState<number>()
   
   useEffect(()=> {
     (async ()=> {
@@ -14,7 +15,7 @@ function Dashboard() {
       const res = await visitorService.getAllVisitor();
       setVisitor(res)
     })()
-  },[])
+  },[changed_id])
 
   return (
     <div className="w-[100%]">
@@ -27,7 +28,7 @@ function Dashboard() {
         <div className="w-[100%] flex items-center justify-start"><p>All visitor user</p></div>
         {
           visitors?.map((items, idx) => (
-            <UserList created_at={items.created_at} id={items.id} is_expired={items.is_expired} password={items.password} status={items.status} username={items.username} updated_at={items.updated_at} key={idx} />
+            <UserList data={items} setChanged={setChanged} key={idx} />
           ))
         }
       </div>

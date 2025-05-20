@@ -41,17 +41,22 @@ function Login() {
 
   const onSubmit = async (data: logintype) => {
     try {
-      const res = await loginService.login(data)
-      if (res) {
-        const decoded = decodePaylod()
-        if (decoded) {
-          decoded.role == 'admin'? navigate("/dash") : navigate('/movies')
-          reset()
-        }
+      await loginService.login(data)
+    } catch (error: any) {
+      if(error.response.data == "⛔ User expired\n") {
+        reset();
+        alert(error.response.data);
       }
-    } catch (error) {
+      return
+    }
+    const decoded = decodePaylod()
+    if (decoded) {
+      if (decoded?.role == "admin") {
+        navigate("/dash");
+      } else {
+        navigate("/movies");
+      }
       reset()
-      alert("your account has been desabled");
     }
   }
 

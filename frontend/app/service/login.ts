@@ -3,13 +3,15 @@ import { apiService } from "./axios"
 
 export class LoginService {
   login = async (data: logintype) => {
-    return await apiService.post("/login", data)
-    .then(async (response) => await response.data)
-    .then((data: LogRes) => {
-      if (data.token) {
-        localStorage.setItem("token", data.token)
+    try {
+      const response = await apiService.post("/login", data);
+      const result: LogRes = response.data;
+      if (result.token) {
+        localStorage.setItem("token", result.token);
       }
-      return data
-    })
+      return result
+    } catch (error: any) {
+      throw error
+    }
   }
 }

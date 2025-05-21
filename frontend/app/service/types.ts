@@ -16,3 +16,9 @@ export type visitorType = {
   created_at: string;
   updated_at: string;
 }
+
+export type newVisitorType = {
+  username: string;
+  password: string;
+  status: string;
+}

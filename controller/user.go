@@ -70,20 +70,6 @@ func (c *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user.Status == "admin" {
-		is_already_exist, err := c.R.IsAdminAlreadyExist()
-		if err != nil {
-			if err.Error() != "record not found" {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-		}
-		if is_already_exist {
-			http.Error(w, "can not create another admin", http.StatusBadRequest)
-			return
-		}
-	}
-
 	hashedPass, err := lib.HashPass(user.Password)
 	if err != nil {
 		http.Error(w, "Error hashing password", http.StatusInternalServerError)

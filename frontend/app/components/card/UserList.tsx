@@ -2,23 +2,34 @@ import Trash from "../icon/Trash"
 import { Switch } from "../ui/switch"
 import type { visitorType } from "~/service/types"
 import { VisitorService } from "~/service/visitor"
+import { toast } from "sonner"
 
 type Porps = {
   data: visitorType;
-  setChanged: React.Dispatch<React.SetStateAction<number | undefined>>
+  setMessage: React.Dispatch<React.SetStateAction<string>>
 }
 
-function UserList({data, setChanged}: Porps) {
+function UserList({data, setMessage}: Porps) {
   const isActive = () => {
-    return data.is_expired? "bg-amber-500 text-white font-bold text-[11px] pt-[5px] pr-[7px] pb-[5px] pl-[7px]": " bg-emerald-400 text-white font-bold text-[11px] pt-[5px] pr-[7px] pb-[5px] pl-[7px] rounded-[5px] mt-[12%]"
+    return data.is_expired? " bg-amber-400 text-white font-bold text-[11px] pt-[5px] pr-[7px] pb-[5px] pl-[7px] rounded-[5px] mt-[12%]": " bg-emerald-400 text-white font-bold text-[11px] pt-[5px] pr-[7px] pb-[5px] pl-[7px] rounded-[5px] mt-[12%]"
   }
-  const dateSplited = data.created_at.split("T")
+  const dateSplited = data.created_at.split("T");
   const visitorService = new VisitorService();
 
   const reabilite = async ()=> {
-    const res = await visitorService.reactiveVisitor(data.id)
-    setChanged(data.id)
-    console.log(res);
+    const res = await visitorService.reactiveVisitor(data.id);
+    setMessage(res.message);
+    toast(res.message, {
+      description: Date.now(),
+    })
+  }
+
+  const deleteVisitor = async () => {
+    const res = await visitorService.deleteVisitor(data.id);
+    toast(res.message, {
+      description: Date.now(),
+    })
+    setMessage(res.message);
   }
 
   return (
@@ -44,8 +55,10 @@ function UserList({data, setChanged}: Porps) {
         <p className={isActive()}>{data.is_expired?"INACTIVE":"ACTIVE"}</p>
       </div>
       <div className="flex align-center justify-center gap-[10px] mt-[1%]">
-        <Switch checked={!data.is_expired} onCheckedChange={reabilite} />
-        <Trash />
+        <Switch checked={!data.is_expired} onCheckedChange={reabilite} className="cursor-pointer" />
+        <div className="cursor-pointer" onClick={deleteVisitor}>
+          <Trash />
+        </div>
       </div>
     </div>
   )

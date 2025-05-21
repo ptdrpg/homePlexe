@@ -15,6 +15,7 @@ import type { logintype } from "~/service/types";
 import { useNavigate } from "react-router";
 import { isTokenValid } from "~/service/axios";
 import { decodePaylod } from "~/service/decode";
+import { toast } from "sonner";
 
 function Login() {
   const loginService = new LoginService()
@@ -41,11 +42,16 @@ function Login() {
 
   const onSubmit = async (data: logintype) => {
     try {
-      await loginService.login(data)
+      await loginService.login(data);
+      toast.success("Successfuly logged in", {
+        description: Date.now(),
+      });
     } catch (error: any) {
       if(error.response.data == "⛔ User expired\n") {
         reset();
-        alert(error.response.data);
+        toast.error(error.response.data, {
+          description: Date.now()
+        })
       }
       return
     }

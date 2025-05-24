@@ -10,8 +10,9 @@ import (
 )
 
 type Serie struct {
-	Title   string   `json:"title"`
-	Ep_list []string `json:"ep_list"`
+	Title        string   `json:"title"`
+	Ep_list      []string `json:"ep_list"`
+	EpisodeCount int      `json:"episode_count"`
 }
 
 type Response struct {
@@ -46,7 +47,7 @@ func removeExtension(name string) string {
 }
 
 func shouldIgnoreDir(name string) bool {
-	ignored := []string{"proc", "dev", "sys", "run", "var", "etc", "boot", "tmp", "snap", "lib", "SDK"}
+	ignored := []string{"proc", "dev", "sys", "run", "var", "etc", "boot", "tmp", "snap", "lib", "SDK", "hira francais", "Music", "engine", "ABBA"}
 	base := filepath.Base(name)
 	if strings.HasPrefix(base, ".") {
 		return true
@@ -100,7 +101,7 @@ func isSeries(files []string) bool {
 
 	numRegexp := regexp.MustCompile(`(?i)(?:S\d{1,2}E(\d{1,2})|E(\d{1,2})|Episode\s*(\d+)|(\d+))`)
 
-	allAreNumeric := true 
+	allAreNumeric := true
 
 	for _, f := range files {
 		base := extractSeriesName(f)
@@ -169,7 +170,6 @@ func isSeries(files []string) bool {
 
 	return true
 }
-
 
 func atoiSafe(s string) int {
 	i, _ := strconv.Atoi(s)
@@ -281,7 +281,11 @@ func GetAllPath() Response {
 		if strings.Contains(lowerTitle, "mp4") || strings.Contains(lowerTitle, "image_room") {
 			continue
 		}
-		serie := Serie{Title: title, Ep_list: paths}
+		serie := Serie{
+			Title:        title,
+			Ep_list:      paths,
+			EpisodeCount: len(paths),
+		}
 		res.List = append(res.List, serie)
 	}
 

@@ -19,7 +19,7 @@ type Serie struct {
 }
 
 type Response struct {
-	List []Serie
+	List []Serie `json:"list"`
 }
 
 type Episode struct {

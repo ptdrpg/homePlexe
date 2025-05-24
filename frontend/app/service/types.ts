@@ -22,3 +22,13 @@ export type newVisitorType = {
   password: string;
   status: string;
 }
+
+export type Serie = {
+	title: string;
+	ep_list:string[];
+	episode_count: number;
+}
+
+export type SerieResponse = {
+	list: Serie[]
+}

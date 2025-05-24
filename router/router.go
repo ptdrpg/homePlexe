@@ -38,12 +38,6 @@ func (r *Router) RegisterRouter() {
 		})
 	})
 
-	r.R.Group(func(public chi.Router) {
-		public.Route("/api/v1/movies", func(movie chi.Router) {
-			movie.Get("/", r.C.MoviesList)
-		})
-	})
-
 	r.R.Group(func(private chi.Router) {
 		private.Use(lib.JWTMiddleware)
 		private.Route("/api/v1", func(v1 chi.Router) {
@@ -52,6 +46,9 @@ func (r *Router) RegisterRouter() {
 				users.Post("/newVisitor", r.C.CreateUser)
 				users.Put("/reabilite/{id}", r.C.ActualiseUser)
 				users.Delete("/delete/{id}", r.C.DeleteUser)
+			})
+			v1.Route("/movies", func(movies chi.Router) {
+				movies.Get("/list", r.C.MoviesList)
 			})
 		})
 	})

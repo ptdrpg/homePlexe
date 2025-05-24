@@ -46,7 +46,7 @@ function Sidebar() {
     navigate("/");
   }
   return (
-    <div className='flex flex-col items-start justify-between h-[100vh] bg-white pt-5 pb-5'>
+    <div className='flex flex-col items-start justify-between h-[100vh] bg-white pt-5'>
       <div className='flex flex-col items-center justify-start gap-5 w-[100%]'>
         <Users />
         <div className='w-[100%]'>
@@ -57,9 +57,9 @@ function Sidebar() {
           }
         </div>
       </div>
-      <div className='flex items-center justify-start w-[100%] p-[10px] gap-[10px] cursor-pointer hover:bg-emerald-400 hover:text-white' onClick={logout}>
+      <div className='flex items-center justify-start w-[100%] p-[10px] gap-[10px] cursor-pointer' onClick={logout}>
         <LogoutIcon />
-        <p className='font-bold' >Logout</p>
+        <p className='font-bold text-[12px]' >Logout</p>
       </div>
     </div>
   )
